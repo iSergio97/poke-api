@@ -1,16 +1,17 @@
 <template>
   <div v-if="loading">Loading...</div>
-  <div
-    v-else
-    class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6 gap-4 mt-12 w-auto"
-  >
-    <CardComponent
-      v-for="pokemon in searchPokemon"
-      :key="pokemon.name"
-      class="hover:cursor-pointer hover:bg-gray-200"
-      :pokemon
-      @click="replacePokemon"
-    />
+  <div v-else>
+    <div
+      class="gap-4 mt-12 w-auto grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6"
+    >
+      <CardComponent
+        v-for="pokemon in searchPokemon"
+        :key="pokemon.name"
+        class="hover:cursor-pointer hover:bg-gray-200"
+        :pokemon
+        @click="replacePokemon"
+      />
+    </div>
   </div>
 </template>
 
@@ -32,7 +33,6 @@ let setPokeFunction: Function | undefined;
 
 const replacePokemon = (pokemon: Pokemon) => {
   if (setPokeFunction) {
-    // TODO: Navigate to the id/name view
     poke.value = pokemon;
     setPokeFunction(pokemon);
     router.push(`/${poke.value.id}`);
