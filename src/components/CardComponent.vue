@@ -1,6 +1,6 @@
 <template>
   <div
-    class="border border-gray-200 p-6 flex flex-col items-center shadow"
+    class="border border-gray-200 p-6 flex flex-col items-center shadow transition-transform duration-300 hover:scale-x-120 hover:scale-y-120"
     @click="emit('click', pokemon)"
   >
     <img
