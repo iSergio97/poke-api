@@ -27,7 +27,7 @@ export interface Pokemon {
   past_types: PastType[];
   species: Species;
   sprites: Sprites;
-  stats: StaticRange[];
+  stats: any[]; // TODO: Define the structure of stats
   types: Types[];
   weight: number;
 }
