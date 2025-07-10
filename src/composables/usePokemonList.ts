@@ -25,6 +25,10 @@ const getInfoPokemon = async (search: SearchPokemon[]) => {
 
 const getPokemonById = async (id: number) => {
   const { data: pokemon } = await axios.get<Pokemon>(`${BASE_URL}/pokemon/${id}`);
+  pokemon.abilities.forEach(async (ability) => {
+    const { data: abilityData } = await axios.get(ability.ability.url);
+    ability.ability.root = abilityData;
+  });
 
   return pokemon;
 };
@@ -41,20 +45,24 @@ const getListado = async () => {
   }
 };
 
-const usePokemonList = async () => {
+const usePokemonList = async (fetch: boolean = true) => {
   const store = pokemonListStore();
   const { list, pokemon } = storeToRefs(store);
-  const pokemonListQuery = await getListado();
+  let pokemonListQuery = {};
 
-  watch(
-    pokemonListQuery,
-    (newList) => {
-      if (newList) {
-        store.replaceList(newList as Pokemon[]);
-      }
-    },
-    { immediate: true },
-  );
+  if (fetch) {
+    pokemonListQuery = await getListado();
+
+    watch(
+      pokemonListQuery,
+      (newList) => {
+        if (newList) {
+          store.replaceList(newList as Pokemon[]);
+        }
+      },
+      { immediate: true },
+    );
+  }
 
   return {
     list,
