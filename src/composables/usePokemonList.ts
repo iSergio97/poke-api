@@ -25,15 +25,19 @@ const getInfoPokemon = async (search: SearchPokemon[]) => {
 
 const getPokemonById = async (id: number) => {
   const { data: pokemon } = await axios.get<Pokemon>(`${BASE_URL}/pokemon/${id}`);
-  pokemon.abilities.forEach(async (ability) => {
-    ability.ability.root = null; // Initialize root to null
+
+  // Añadimos la propiedad root y la rellenamos correctamente
+  for (const ability of pokemon.abilities) {
     const { data: abilityData } = await axios.get(ability.ability.url);
-    ability.ability.root = abilityData;
-  });
 
-  console.log('Pokemon fetched by ID:', pokemon);
+    // Si quieres que sea reactivo, asegúrate de usar un objeto nuevo
+    ability.ability = {
+      ...ability.ability,
+      root: abilityData
+    };
+  }
 
-  return pokemon;
+  return ref(pokemon); // Esto ya será reactivo con root incluida
 };
 
 const getListado = async () => {
@@ -55,17 +59,17 @@ const usePokemonList = async (fetch: boolean = true) => {
 
   if (fetch) {
     pokemonListQuery = await getListado();
-
-    watch(
-      pokemonListQuery,
-      (newList) => {
-        if (newList) {
-          store.replaceList(newList as Pokemon[]);
-        }
-      },
-      { immediate: true },
-    );
   }
+
+  watch(
+    pokemonListQuery,
+    (newList) => {
+      if (newList) {
+        store.replaceList(newList as Pokemon[]);
+      }
+    },
+    { immediate: true },
+  );
 
   return {
     list,

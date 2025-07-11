@@ -1,5 +1,5 @@
 <template>
-  <LoadingComponent v-if="loading" />
+  <LoadingComponent v-if="loading || !pokemon" />
   <div v-else class="columns-1">
     <div>
       <div class="flex capitalize text-3xl text-bold justify-center pb-4">{{ pokemon?.name }}</div>
@@ -20,11 +20,12 @@
       <div class="text-2xl text-bold">Abilities</div>
       <ul class="list-none">
         <li v-for="(ability, index) in pokemon?.abilities" :key="index" class="capitalize">
-          <span>{{ ability.ability.root }}</span>
           <TooltipComponent
-            :text="ability.ability.root?.name ?? 'No ability name available.'"
+            v-if="ability.ability.root"
+            :text="ability.ability.root?.name ?? ability.ability.name"
             :content="
-              ability.ability.root?.effect_entries[0]?.effect || 'No effect description available.'
+              getEnglishEffect(ability.ability.root?.effect_entries) ||
+              'No effect description available.'
             "
           />
         </li>
@@ -51,23 +52,25 @@ import LoadingComponent from '@/components/LoadingComponent.vue';
 import TooltipComponent from '@/components/TooltipComponent.vue';
 import TypeComponent from '@/components/TypeComponent.vue';
 import usePokemonList from '@/composables/usePokemonList';
-import { onMounted, ref, type Ref } from 'vue';
+import type { EffectEntry } from '@/interface/ability2.interface';
+import { ref, type Ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 
 const loading: Ref<boolean> = ref(true);
 const { pokemon, getPokemonById, setPokemon } = await usePokemonList(false);
+if (pokemon.value === undefined) {
+  const pokemonData = await getPokemonById(+route.params['id']);
+  setPokemon(pokemonData.value);
+}
+loading.value = false;
 
-onMounted(async () => {
-  if (pokemon.value === undefined) {
-    const pokemonData = await getPokemonById(+route.params['id']);
-    setPokemon(pokemonData);
-    console.log('Pokemon fetched on mount:', pokemonData);
-    console.log('Pokemon set in store:', pokemon.value);
-  }
-  loading.value = false;
-});
+const getEnglishEffect = (effectEntries: EffectEntry[] | undefined) => {
+  if (!effectEntries || effectEntries.length === 0) return '';
+  const englishEntry = effectEntries.find((entry) => entry.language.name === 'en');
+  return englishEntry ? englishEntry.effect : null;
+};
 </script>
 
 <style scoped></style>
