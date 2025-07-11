@@ -26,9 +26,12 @@ const getInfoPokemon = async (search: SearchPokemon[]) => {
 const getPokemonById = async (id: number) => {
   const { data: pokemon } = await axios.get<Pokemon>(`${BASE_URL}/pokemon/${id}`);
   pokemon.abilities.forEach(async (ability) => {
+    ability.ability.root = null; // Initialize root to null
     const { data: abilityData } = await axios.get(ability.ability.url);
     ability.ability.root = abilityData;
   });
+
+  console.log('Pokemon fetched by ID:', pokemon);
 
   return pokemon;
 };

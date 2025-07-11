@@ -41,7 +41,7 @@ const replacePokemon = (pokemon: Pokemon) => {
 
 onMounted(async () => {
   loading.value = true;
-  const { list, pokemon, setPokemon } = await usePokemonList();
+  const { list, pokemon, setPokemon } = await usePokemonList(true);
   searchPokemon.value = list.value;
   poke.value = pokemon.value;
   loading.value = false;

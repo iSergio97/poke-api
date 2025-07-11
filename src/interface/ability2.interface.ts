@@ -1,7 +1,7 @@
 export interface Ability2 {
   name: string;
   url: string;
-  root: Root;
+  root: Root | null;
 }
 
 export interface Root {
