@@ -8,7 +8,7 @@ import { storeToRefs } from 'pinia';
 import { ref, watch } from 'vue';
 
 import { pokemonList } from '@/json/poke_api';
-import { BASE_URL } from '@/api/BASE_URL';
+import { useQuery } from '@tanstack/vue-query';
 
 const getInfoPokemon = async (search: SearchPokemon[]) => {
   const pokeList: Promise<Pokemon>[] = [];
@@ -23,23 +23,6 @@ const getInfoPokemon = async (search: SearchPokemon[]) => {
   return pokeList;
 };
 
-const getPokemonById = async (id: number) => {
-  const { data: pokemon } = await axios.get<Pokemon>(`${BASE_URL}/pokemon/${id}`);
-
-  // Añadimos la propiedad root y la rellenamos correctamente
-  for (const ability of pokemon.abilities) {
-    const { data: abilityData } = await axios.get(ability.ability.url);
-
-    // Si quieres que sea reactivo, asegúrate de usar un objeto nuevo
-    ability.ability = {
-      ...ability.ability,
-      root: abilityData
-    };
-  }
-
-  return ref(pokemon); // Esto ya será reactivo con root incluida
-};
-
 const getListado = async () => {
   try {
     // const { data } = await axios.get<Search>(LIST);
@@ -52,17 +35,16 @@ const getListado = async () => {
   }
 };
 
-const usePokemonList = async (fetch: boolean = true) => {
+const usePokemonList = async () => {
   const store = pokemonListStore();
   const { list, pokemon } = storeToRefs(store);
-  let pokemonListQuery = {};
-
-  if (fetch) {
-    pokemonListQuery = await getListado();
-  }
+  const {data, isLoading, isError} = useQuery({
+    queryKey: ['pokemonList'],
+    queryFn: getListado
+  });
 
   watch(
-    pokemonListQuery,
+    data,
     (newList) => {
       if (newList) {
         store.replaceList(newList as Pokemon[]);
@@ -73,9 +55,10 @@ const usePokemonList = async (fetch: boolean = true) => {
 
   return {
     list,
+    isLoading,
+    isError,
     pokemon,
     setPokemon: store.setPokemon,
-    getPokemonById,
   };
 };
 

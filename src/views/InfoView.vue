@@ -1,5 +1,8 @@
 <template>
-  <LoadingComponent v-if="loading || !pokemon" />
+  <LoadingComponent v-if="isLoading || !pokemon" />
+  <div v-else-if="error" class="text-center text-red-500">
+    Error loading Pokémon data: {{ error.message }}
+  </div>
   <div v-else class="columns-1">
     <div>
       <div class="flex capitalize text-3xl text-bold justify-center pb-4">{{ pokemon?.name }}</div>
@@ -21,7 +24,6 @@
       <ul class="list-none">
         <li v-for="(ability, index) in pokemon?.abilities" :key="index" class="capitalize">
           <TooltipComponent
-            v-if="ability.ability.root"
             :text="ability.ability.root?.name ?? ability.ability.name"
             :content="
               getEnglishEffect(ability.ability.root?.effect_entries) ||
@@ -33,8 +35,8 @@
       <div class="text-2xl text-bold">Stats</div>
       <ul class="list-none flex flex-col gap-2">
         <li v-for="(stat, index) in pokemon?.stats" :key="index" class="capitalize">
-          <span>{{ stat.stat.name }}</span>
-          <progress :value="stat.base_stat" max="255" />
+          <span class="flex text-xl p-4">{{ stat.stat.name }}</span>
+          <ProgressBarComponent :width="stat.base_stat" />
         </li>
       </ul>
       <div class="text-2xl text-bold">Moves</div>
@@ -48,26 +50,31 @@
 </template>
 
 <script setup lang="ts">
+import { getPokemonById } from '@/api/getPokemonById';
 import LoadingComponent from '@/components/LoadingComponent.vue';
+import ProgressBarComponent from '@/components/ProgressBarComponent.vue';
 import TooltipComponent from '@/components/TooltipComponent.vue';
 import TypeComponent from '@/components/TypeComponent.vue';
-import usePokemonList from '@/composables/usePokemonList';
 import type { EffectEntry } from '@/interface/ability2.interface';
-import { ref, type Ref } from 'vue';
+import { useQuery } from '@tanstack/vue-query';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 
-const loading: Ref<boolean> = ref(true);
-const { pokemon, getPokemonById, setPokemon } = await usePokemonList(false);
-if (pokemon.value === undefined) {
-  const pokemonData = await getPokemonById(+route.params['id']);
-  setPokemon(pokemonData.value);
-}
-loading.value = false;
+const id = +route.params['id'];
 
-const getEnglishEffect = (effectEntries: EffectEntry[] | undefined) => {
-  if (!effectEntries || effectEntries.length === 0) return '';
+const {
+  data: pokemon,
+  isLoading,
+  error,
+} = useQuery({
+  queryKey: ['pokemon', route.params['id']],
+  queryFn: async () => await getPokemonById(id),
+  enabled: !!id,
+});
+
+const getEnglishEffect = (effectEntries: EffectEntry[] | undefined): string | null => {
+  if (!effectEntries || effectEntries.length === 0) return null;
   const englishEntry = effectEntries.find((entry) => entry.language.name === 'en');
   return englishEntry ? englishEntry.effect : null;
 };
