@@ -8,6 +8,7 @@ import type { Sprites } from './sprites.interface';
 import type { HeldItem } from './held_item.interface';
 import type { PastType } from './past_type.interface';
 import type { Types } from './types.interface';
+import type { Stat } from './stat.interface';
 
 export interface Pokemon {
   abilities: Ability[];
@@ -27,7 +28,7 @@ export interface Pokemon {
   past_types: PastType[];
   species: Species;
   sprites: Sprites;
-  stats: any[]; // TODO: Define the structure of stats
+  stats: Stat[];
   types: Types[];
   weight: number;
 }
