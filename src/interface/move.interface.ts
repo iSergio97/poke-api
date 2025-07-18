@@ -1,7 +1,10 @@
+import type { VersionGroupDetail } from "./version_group_detail.interface";
+
 export interface Move {
   name: string;
   url: string;
   moveRoot: MoveRoot;
+  version_group_details: VersionGroupDetail[];
 }
 
 export interface MoveRoot {

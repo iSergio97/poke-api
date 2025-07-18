@@ -5,6 +5,7 @@
         <tr>
           <th scope="col" class="px-6 py-3">Name</th>
           <th scope="col" class="px-6 py-3">Description</th>
+          <th scope="col" class="px-6 py-3">Learning method</th>
           <th scope="col" class="px-6 py-3">Effect</th>
           <th scope="col" class="px-6 py-3">Power</th>
           <th scope="col" class="px-6 py-3">Accuracy</th>
@@ -14,7 +15,7 @@
       <tbody>
         <tr
           class="odd:bg-white  even:bg-gray-50 border-b border-gray-200"
-          v-for="({ move }) in moves"
+          v-for="({ move, version_group_details }) in moves"
           :key="move.url"
         >
           <th
@@ -24,6 +25,7 @@
             {{ move.name }}
           </th>
           <td class="px-6 py-4">{{ getMoveText(move.moveRoot.flavor_text_entries) }}</td>
+          <td class="px-6 py-4">{{ getMovesLearningMethod(version_group_details) }}</td>
           <td class="px-6 py-4">{{ getEffectEntry(move.moveRoot.effect_entries) }}</td>
           <td class="px-6 py-4">{{ move.moveRoot.power }}</td>
           <td class="px-6 py-4">{{ move.moveRoot.accuracy }}</td>
@@ -37,6 +39,7 @@
 <script setup lang="ts">
 import type { Mfe } from '@/interface/mfe.interface';
 import type { EffectEntry, FlavorTextEntry } from '@/interface/move.interface';
+import type { VersionGroupDetail } from '@/interface/version_group_detail.interface';
 
 interface Props {
   moves: Mfe[];
@@ -55,6 +58,15 @@ const getEffectEntry = (effectEntries: EffectEntry[]) => {
   }
   const entry = effectEntries.find((entry) => entry.language.name === 'en');
   return entry ? entry.effect : effectEntries[0].effect;
+};
+
+const getMovesLearningMethod = (versionGroupDetails: VersionGroupDetail[]) => {
+  if (!versionGroupDetails || versionGroupDetails.length === 0) {
+    return '';
+  }
+  const method = versionGroupDetails[0].move_learn_method.name;
+  if(method === 'level-up') return `Level Up (${versionGroupDetails[0].level_learned_at})`;
+  return method.charAt(0).toUpperCase() + method.slice(1);
 };
 </script>
 

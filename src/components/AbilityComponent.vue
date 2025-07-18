@@ -15,7 +15,7 @@
             v-if="ability.is_hidden"
             class="text-sm text-orange-600 bg-orange-100 px-2 py-0.5 rounded"
           >
-            Habilidad oculta
+            Hidden Ability
           </span>
         </div>
         <p class="mt-2 text-sm text-gray-600 mt-auto">

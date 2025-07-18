@@ -4,8 +4,8 @@
     Error loading Pokémon data: {{ error.message }}
   </div>
   <div v-else class="grid gap-4">
-    <div class="grid grid-cols-2">
-      <div class="col-span-1">
+    <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4">
+      <div class="sm:col-span-1">
         <div class="flex capitalize text-3xl text-bold justify-center pb-4">
           {{ pokemon?.name }}
         </div>
