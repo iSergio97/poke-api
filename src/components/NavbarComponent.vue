@@ -1,5 +1,6 @@
 <template>
   <nav class="bg-red-400 border-gray-200">
+    {{ search }}
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
       <RouterLink to="/" class="flex items-center space-x-3 rtl:space-x-reverse">
         <img src="@/assets/logo.svg" class="h-8" alt="Poke-API Logo" />
@@ -37,6 +38,7 @@
           </div>
           <input
             type="text"
+            v-model="search"
             id="search-navbar"
             class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Buscar Pokemon"
@@ -93,7 +95,7 @@
             <span
               class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600"
             >
-            <PokemonSVGComponent />
+              <PokemonSVGComponent />
             </span>
             <input
               type="text"
@@ -110,8 +112,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import PokemonSVGComponent from './PokemonSVGComponent.vue';
+import { searchStore } from '@/stores/search.store';
+import debounce from 'lodash/debounce';
+
+const { replaceSearch } = searchStore();
 
 const search = ref('');
+
+const debouncedReplace = debounce((value: string) => {
+  replaceSearch(value);
+}, 300);
+
+watch(search, (newSearch: string) => {
+  debouncedReplace(newSearch);
+});
+
+
 </script>

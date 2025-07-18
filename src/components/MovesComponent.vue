@@ -5,7 +5,7 @@
         <tr>
           <th scope="col" class="px-6 py-3">Name</th>
           <th scope="col" class="px-6 py-3">Description</th>
-          <th scope="col" class="px-6 py-3">Learning method</th>
+          <th scope="col" class="px-6 py-3">Learning</th>
           <th scope="col" class="px-6 py-3">Effect</th>
           <th scope="col" class="px-6 py-3">Power</th>
           <th scope="col" class="px-6 py-3">Accuracy</th>
@@ -27,9 +27,9 @@
           <td class="px-6 py-4">{{ getMoveText(move.moveRoot.flavor_text_entries) }}</td>
           <td class="px-6 py-4">{{ getMovesLearningMethod(version_group_details) }}</td>
           <td class="px-6 py-4">{{ getEffectEntry(move.moveRoot.effect_entries) }}</td>
-          <td class="px-6 py-4">{{ move.moveRoot.power }}</td>
-          <td class="px-6 py-4">{{ move.moveRoot.accuracy }}</td>
-          <td class="px-6 py-4">{{ move.moveRoot.pp }}</td>
+          <td class="px-6 py-4 text-center">{{ move.moveRoot.power }}</td>
+          <td class="px-6 py-4 text-center">{{ move.moveRoot.accuracy }}</td>
+          <td class="px-6 py-4 text-center">{{ move.moveRoot.pp }}</td>
         </tr>
       </tbody>
     </table>
