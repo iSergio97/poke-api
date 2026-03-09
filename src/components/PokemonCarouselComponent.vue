@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full max-w-sm mx-auto">
+  <div class="w-full max-w-xs mx-auto">
     <!-- Imagen principal grande -->
     <div
       class="relative aspect-square bg-gray-100 border rounded-xl flex items-center justify-center overflow-hidden"

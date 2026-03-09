@@ -1,11 +1,11 @@
 <template>
-  <h3 class="text-xl font-semibold mb-2 flex justify-center pb-4">Abilities</h3>
-  <div class="flex justify-center gap-4">
-    <div class="grid gap-4 items-stretch">
+  <h3 class="text-lg sm:text-xl font-semibold mb-2 flex justify-center pb-4">Abilities</h3>
+  <div class="flex justify-center gap-2 md:gap-4">
+    <div class="grid gap-2 md:gap-4 items-stretch">
       <div
         v-for="ability in abilities"
         :key="ability.ability.name"
-        class="flex flex-col justify-between p-4 rounded-xl shadow-sm bg-white border border-gray-200"
+        class="flex flex-col justify-between p-2 md:p-4 rounded-xl shadow-sm bg-white border border-gray-200"
       >
         <div class="flex items-center justify-between pb-2">
           <h2 class="text-lg font-semibold capitalize text-gray-800">
