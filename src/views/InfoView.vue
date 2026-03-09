@@ -4,18 +4,13 @@
     Error loading Pokémon data: {{ error.message }}
   </div>
   <div v-else class="grid gap-4">
-    <div class="grid md:grid-cols-2 gap-4">
+    <div class="flex flex-col md:flex-row gap-32">
       <div>
         <div class="flex capitalize text-xl sm:text-2xl md:text-3xl font-bold justify-center pb-2 sm:pb-4">
           {{ pokemon!.name }}
         </div>
         <div class="flex justify-center">
-          <PokemonCarouselComponent :sprites="pokemon!.sprites" />
-        </div>
-        <div class="grid justify-center pt-4">
-          <div class="flex justify-between gap-4 pt-3">
-            <TypeComponent custom-text-size="text-lg sm:text-xl md:text-2xl" :types="pokemon!.types" />
-          </div>
+          <PokemonCarouselComponent :sprites="pokemon!.sprites" :types="pokemon!.types" />
         </div>
       </div>
       <div class="flex flex-col justify-center">

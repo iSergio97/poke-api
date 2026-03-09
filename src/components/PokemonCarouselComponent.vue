@@ -15,6 +15,12 @@
       </transition>
     </div>
 
+    <div class="grid justify-center pt-4 ">
+      <div class="flex justify-center gap-4 pt-3">
+        <TypeComponent custom-text-size="text-lg sm:text-xl md:text-2xl" :types="types" />
+      </div>
+    </div>
+
     <div class="text-center text-2xl font-bold mt-4">
       <h3>{{ imageName }}</h3>
     </div>
@@ -42,12 +48,15 @@
 <script setup lang="ts">
 import type { Sprites } from '@/interface/sprites.interface';
 import { ref, onMounted, nextTick, watch } from 'vue';
+import TypeComponent from './TypeComponent.vue';
+import type { Types } from '@/interface/types.interface';
 
 interface Props {
   sprites: Sprites;
+  types: Types[]
 }
 
-const { sprites } = defineProps<Props>();
+const { sprites, types } = defineProps<Props>();
 
 const currentIndex = ref(0);
 const images = ref<string[]>([]);
