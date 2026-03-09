@@ -6,32 +6,19 @@ export const getPokemonByIdOrName = async (id: number | string): Promise<Pokemon
   try {
     const { data: pokemon } = await axios.get<Pokemon>(`${BASE_URL}/pokemon/${id}`);
 
-    // Obtener habilidades en paralelo
-    const abilityPromises = pokemon.abilities.map(async (ability) => {
-      try {
-        const { data: abilityData } = await axios.get(ability.ability.url);
-        return { ...ability, ability: { ...ability.ability, root: abilityData } };
-      } catch (err) {
-        console.error(`Error al cargar habilidad: ${ability.ability.name}`, err);
-        return ability; // Devuelve sin root si falla
-      }
-    });
-
-    // Obtener movimientos en paralelo
-    const movePromises = pokemon.moves.map(async (move) => {
-      try {
-        const { data: moveData } = await axios.get(move.move.url);
-        return { ...move, move: { ...move.move, moveRoot: moveData } };
-      } catch (err) {
-        console.error(`Error al cargar movimiento: ${move.move.name}`, err);
-        return move; // Devuelve sin moveRoot si falla
-      }
-    });
-
     // Esperamos a que terminen ambas
     const [enrichedAbilities, enrichedMoves] = await Promise.all([
-      Promise.all(abilityPromises),
-      Promise.all(movePromises),
+      enrich(
+        pokemon.abilities, // lista
+        (a) => a.ability.url, // función para obtener la URL. Por cada elemento que se itere, se usara el valor de a.ability.url para hacer la petición
+        (a, data) => ({ ...a, ability: { ...a.ability, root: data } }) // función para fusionar datos
+      ),
+
+      enrich(
+        pokemon.moves, // lista
+        (m) => m.move.url, // función para obtener la URL. Por cada elemento que se itere, se usara el valor de m.move.url para hacer la petición
+        (m, data) => ({ ...m, move: { ...m.move, moveRoot: data } }) // función para fusionar datos
+      ),
     ]);
 
     // Devolver nuevo objeto Pokémon enriquecido
@@ -45,3 +32,17 @@ export const getPokemonByIdOrName = async (id: number | string): Promise<Pokemon
     throw error; // Re-lanzar el error para manejarlo en el componente
   }
 };
+
+const enrich = async <T>(list: T[], getURL: (item: T) => string, merge: (item: T, data: any) => T) => {
+  return Promise.all(
+    list.map(async (item) => {
+      try {
+        const { data } = await axios.get(getURL(item));
+        return merge(item, data);
+      } catch (error) {
+        console.error(`Error al enriquecer item con URL ${getURL(item)}:`, error);
+        return item; // Devuelve el item original si falla
+      }
+    })
+  );
+}

@@ -94,6 +94,11 @@ onMounted(() => {
   extractImages();
 });
 
+watch(() => sprites, () => {
+  extractImages();
+  currentIndex.value = 0;
+}, { deep: true });
+
 const selectImage = (idx: number) => {
   currentIndex.value = idx;
   nextTick(() => {

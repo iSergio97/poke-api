@@ -13,15 +13,17 @@
           <PokemonCarouselComponent :sprites="pokemon!.sprites" :types="pokemon!.types" />
         </div>
       </div>
-      <div class="flex flex-col justify-center">
-        <div class="grid gap-4 items-stretch pt-4 sm:pt-8 md:pt-12">
-          <AbilityComponent :abilities="pokemon!.abilities" />
+
+      <div class="flex flex-col items-stretch w-full place-items-start">
+        <div class="pt-4 sm:pt-8 md:pt-12">
+          <AbilityComponent :abilities="pokemon!.abilities" class="w-full" />
         </div>
-        <div class="grid gap-4 items-stretch pt-4 sm:pt-8 md:pt-12">
-          <StatsComponent :stats="pokemon!.stats" />
+        <div class="pt-4 sm:pt-8 md:pt-12">
+          <StatsComponent :stats="pokemon!.stats" class="w-full" />
         </div>
       </div>
     </div>
+
     <div class="grid items-center pt-4">
       <MovesComponent :moves="pokemon!.moves" />
     </div>
@@ -46,7 +48,7 @@ const {
   data: pokemon,
   isLoading,
   error,
-} = useQuery({
+  } = useQuery({
   queryKey: ['pokemonById', pathParam],
   queryFn: async () => await getPokemonByIdOrName(pathParam.value),
   enabled: !!pathParam.value,

@@ -1,7 +1,7 @@
 <template>
-  <h3 class="text-lg sm:text-xl font-semibold mb-2 flex justify-center pb-4">Abilities</h3>
-  <div class="flex justify-center gap-2 md:gap-4">
-    <div class="grid gap-2 md:gap-4 items-stretch">
+  <h3 class="text-lg sm:text-xl font-semibold mb-2 flex justify-start pb-4">Abilities</h3>
+  <div class="flex justify-start gap-2 md:gap-4">
+    <div class="grid gap-2 md:gap-4 w-full">
       <div
         v-for="ability in abilities"
         :key="ability.ability.name"
@@ -18,7 +18,7 @@
             Hidden Ability
           </span>
         </div>
-        <p class="mt-2 text-sm text-gray-600 mt-auto">
+        <p class="mt-2 text-sm text-gray-600">
           {{
             getEnglishEffect(ability.ability.root?.effect_entries) ||
             'No effect description available.'
