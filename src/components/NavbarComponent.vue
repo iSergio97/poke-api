@@ -42,6 +42,11 @@
             class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Buscar Pokemon"
           />
+          <div v-if="filteredPokemons.length" class="absolute z-10 bg-white border border-gray-300 rounded-lg mt-1 w-full max-h-60 overflow-y-auto">
+            <div v-for="pokemon in filteredPokemons" :key="pokemon.name" class="p-2 hover:bg-gray-100 cursor-pointer" @click="selectPokemon(pokemon)">
+              <p class="capitalize font-bold">{{ pokemon.name }}</p>
+            </div>
+          </div>
         </div>
         <button
           data-collapse-toggle="navbar-search"
@@ -99,7 +104,7 @@
             <input
               type="text"
               v-model="search"
-              id="search-navbar"
+              id="search-navbar-mobile"
               class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Buscar Pokemon"
             />
@@ -114,11 +119,35 @@
 import { ref, watch } from 'vue';
 import PokemonSVGComponent from './PokemonSVGComponent.vue';
 import { searchStore } from '@/stores/search.store';
+import type { Pokemon } from '@/interface/pokemon.interface';
+import { computed } from 'vue';
 import debounce from 'lodash/debounce';
+import { useRouter } from 'vue-router';
+import { usePokemonList } from '@/composables/usePokemonList';
+// import router from '@/router';
 
 const { replaceSearch } = searchStore();
+const { list } = await usePokemonList();
+const router = useRouter();
 
 const search = ref('');
+
+const filteredPokemons = computed(() => {
+  if (!search.value) return [];
+  return list.value.filter((p: Pokemon) => p.name.toLowerCase().startsWith(search.value.toLowerCase())).slice(0, 10);
+});
+
+const selectPokemon = (pokemon: Pokemon) => {
+  search.value = '';
+  router.push('/info/' + pokemon.name);
+};
+
+// onMounted(async () => {
+//   if (list.value.length === 0) {
+//     const list = await getListado();
+//     replaceList(list || []);
+//   }
+// });
 
 const debouncedReplace = debounce((value: string) => {
   replaceSearch(value);

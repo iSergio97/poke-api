@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-3">
+  <div class="space-y-3 border border-gray-200 rounded-xl p-4 bg-white shadow-sm">
     <h3 class="text-xl font-semibold mb-2">Stats</h3>
 
     <div v-for="(stat, index) in stats" :key="stat.stat.name" class="flex items-center gap-4">

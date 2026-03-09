@@ -30,7 +30,7 @@ const getListado = async () => {
   }
 };
 
-const usePokemonList = async () => {
+export const usePokemonList = async () => {
   const store = pokemonListStore();
   const { list, pokemon } = storeToRefs(store);
   const { data, isLoading, isError } = useQuery({
@@ -56,5 +56,3 @@ const usePokemonList = async () => {
     setPokemon: store.setPokemon,
   };
 };
-
-export default usePokemonList;

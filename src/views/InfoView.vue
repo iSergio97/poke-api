@@ -4,7 +4,7 @@
     Error loading Pokémon data: {{ error.message }}
   </div>
   <div v-else class="grid gap-4">
-    <div class="flex flex-col md:flex-row gap-32">
+    <div class="grid md:grid-cols-2 gap-4 w-full">
       <div>
         <div class="flex capitalize text-xl sm:text-2xl md:text-3xl font-bold justify-center pb-2 sm:pb-4">
           {{ pokemon!.name }}
@@ -14,7 +14,9 @@
         </div>
       </div>
       <div class="flex flex-col justify-center">
-        <AbilityComponent :abilities="pokemon!.abilities" />
+        <div class="grid gap-4 items-stretch pt-4 sm:pt-8 md:pt-12">
+          <AbilityComponent :abilities="pokemon!.abilities" />
+        </div>
         <div class="grid gap-4 items-stretch pt-4 sm:pt-8 md:pt-12">
           <StatsComponent :stats="pokemon!.stats" />
         </div>
@@ -34,10 +36,11 @@ import MovesComponent from '@/components/MovesComponent.vue';
 import PokemonCarouselComponent from '@/components/PokemonCarouselComponent.vue';
 import StatsComponent from '@/components/StatsComponent.vue';
 import { useQuery } from '@tanstack/vue-query';
+import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
-const pathParam = route.params['param'] as string;
+const pathParam = computed(() => route.params['param'] as string);
 
 const {
   data: pokemon,
@@ -45,7 +48,7 @@ const {
   error,
 } = useQuery({
   queryKey: ['pokemonById', pathParam],
-  queryFn: async () => await getPokemonByIdOrName(pathParam),
-  enabled: !!pathParam,
+  queryFn: async () => await getPokemonByIdOrName(pathParam.value),
+  enabled: !!pathParam.value,
 });
 </script>

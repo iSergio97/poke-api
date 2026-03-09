@@ -5,7 +5,12 @@ import LoadingComponent from './components/LoadingComponent.vue';
 </script>
 
 <template>
-  <NavbarComponent />
+  <Suspense>
+    <NavbarComponent />
+    <template #fallback>
+      <LoadingComponent />
+    </template>
+  </Suspense>
   <div class="container p-4 mx-auto gap-4 mt-12 w-auto">
     <Suspense>
       <RouterView />
