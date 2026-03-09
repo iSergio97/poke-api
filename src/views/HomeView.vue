@@ -25,7 +25,7 @@ import router from '@/router';
 import { useQuery } from '@tanstack/vue-query';
 
 const replacePokemon = (pokemon: Pokemon) => {
-  router.push(`/${pokemon.id}`);
+  router.push(`/info/${pokemon.name}`);
 };
 
 const {

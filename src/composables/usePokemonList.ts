@@ -10,24 +10,19 @@ import { ref, watch } from 'vue';
 import { pokemonList } from '@/json/poke_api';
 import { useQuery } from '@tanstack/vue-query';
 
-const getInfoPokemon = async (search: SearchPokemon[]) => {
-  const pokeList: Promise<Pokemon>[] = [];
-
-  search.forEach(async (searchPokemon: SearchPokemon) => {
-    const pokePromise: Promise<Pokemon> = axios
-      .get<Promise<Pokemon>>(searchPokemon.url)
-      .then(({ data }) => data);
-    pokeList.push(pokePromise);
-  });
-
-  return pokeList;
+const getInfoPokemon = (search: SearchPokemon[]) => {
+  return search.map((searchPokemon) =>
+    axios
+      .get<Pokemon>(searchPokemon.url)
+      .then(({ data }) => data)
+  );
 };
 
 const getListado = async () => {
   try {
     // const { data } = await axios.get<Search>(LIST);
     const data: Search = pokemonList;
-    const promiseList: Promise<Pokemon>[] = await getInfoPokemon(data.results);
+    const promiseList: Promise<Pokemon>[] = getInfoPokemon(data.results);
     return ref(await Promise.all(promiseList));
   } catch (ex) {
     console.error(ex);
@@ -38,7 +33,7 @@ const getListado = async () => {
 const usePokemonList = async () => {
   const store = pokemonListStore();
   const { list, pokemon } = storeToRefs(store);
-  const {data, isLoading, isError} = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ['pokemonList'],
     queryFn: getListado
   });

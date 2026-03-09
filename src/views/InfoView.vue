@@ -4,9 +4,9 @@
     Error loading Pokémon data: {{ error.message }}
   </div>
   <div v-else class="grid gap-4">
-    <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4">
-      <div class="sm:col-span-1">
-        <div class="flex capitalize text-3xl text-bold justify-center pb-4">
+    <div class="grid md:grid-cols-2 gap-4">
+      <div>
+        <div class="flex capitalize text-xl sm:text-2xl md:text-3xl font-bold justify-center pb-2 sm:pb-4">
           {{ pokemon!.name }}
         </div>
         <div class="flex justify-center">
@@ -14,13 +14,13 @@
         </div>
         <div class="grid justify-center pt-4">
           <div class="flex justify-between gap-4 pt-3">
-            <TypeComponent custom-text-size="text-2xl" :types="pokemon!.types" />
+            <TypeComponent custom-text-size="text-lg sm:text-xl md:text-2xl" :types="pokemon!.types" />
           </div>
         </div>
       </div>
-      <div class="justify-center">
+      <div class="flex flex-col justify-center">
         <AbilityComponent :abilities="pokemon!.abilities" />
-        <div class="grid gap-4 items-stretch pt-12">
+        <div class="grid gap-4 items-stretch pt-4 sm:pt-8 md:pt-12">
           <StatsComponent :stats="pokemon!.stats" />
         </div>
       </div>
@@ -32,7 +32,6 @@
 </template>
 
 <script setup lang="ts">
-// import { getPokemonById, getPokemonByName } from '@/api/getPokemonById';
 import { getPokemonByIdOrName } from '@/api/getPokemonByIdOrName';
 import AbilityComponent from '@/components/AbilityComponent.vue';
 import LoadingComponent from '@/components/LoadingComponent.vue';
@@ -43,15 +42,15 @@ import { useQuery } from '@tanstack/vue-query';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
-const idParam = route.params['id'] as string;
+const pathParam = route.params['param'] as string;
 
 const {
   data: pokemon,
   isLoading,
   error,
 } = useQuery({
-  queryKey: ['pokemonById', idParam],
-  queryFn: async () => await getPokemonByIdOrName(idParam),
-  enabled: !!idParam,
+  queryKey: ['pokemonById', pathParam],
+  queryFn: async () => await getPokemonByIdOrName(pathParam),
+  enabled: !!pathParam,
 });
 </script>
