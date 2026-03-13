@@ -2,20 +2,21 @@
   <div v-if="isLoading">Loading...</div>
   <div v-else-if="isError" class="text-center text-red-500">Error loading Pokémon data</div>
 
-<div
-  v-else
-  class="gap-4 mt-12 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6"
->
-  <CardComponent
-    v-for="pokemon in allPokemon"
-    :key="pokemon.name"
-    :pokemon="pokemon"
-    class="hover:cursor-pointer hover:bg-gray-200"
-    @click="replacePokemon"
-  />
+  <div
+    v-else
+    class="gap-4 mt-12 w-auto grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6"
+  >
+    <CardComponent
+      v-for="pokemon in allPokemon"
+      :key="pokemon.name"
+      class="hover:cursor-pointer hover:bg-gray-200"
+      :pokemon
+      @click="replacePokemon"
+    />
 
-  <div ref="sentinel" class="col-span-full h-20"></div>
-</div>
+    <!-- sentinel -->
+    <div ref="sentinel" class="h-1 col-span-full"></div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -46,17 +47,11 @@ const allPokemon = computed(() => data.value?.pages.flat() ?? []);
 
 const sentinel = ref(null);
 
-useIntersectionObserver(
-  sentinel,
-  ([entry], observerElement) => {
-    if (!entry.isIntersecting) return
+useIntersectionObserver(sentinel, ([entry]) => {
+  if (!entry.isIntersecting) return;
 
-    if (hasNextPage.value && !isFetchingNextPage.value) {
-      fetchNextPage()
-    }
-  },
-  {
-    threshold: 1,
+  if (hasNextPage.value && !isFetchingNextPage.value) {
+    fetchNextPage();
   }
-)
+});
 </script>
