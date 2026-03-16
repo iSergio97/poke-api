@@ -23,7 +23,7 @@ const router = createRouter({
 
 router.beforeResolve(async () => {
   const viewTransition = startViewTransition();
-  await viewTransition.finished;
+  await viewTransition.updateCallbackDone;
 })
 
 export default router;
