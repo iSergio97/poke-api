@@ -1,6 +1,6 @@
 <template>
   <h3 class="text-lg sm:text-xl font-semibold mb-2 flex justify-start pb-4">Abilities</h3>
-  <div class="flex justify-start gap-2 md:gap-4">
+  <div :class="`flex justify-start gap-2 md:gap-4 ${cssClass ?? ''}`">
     <div class="grid gap-2 md:gap-4 w-full">
       <div
         v-for="ability in abilities"
@@ -35,9 +35,10 @@ import type { EffectEntry } from '@/interface/ability2.interface';
 
 interface Props {
   abilities: Ability[];
+  cssClass: string;
 }
 
-const { abilities } = defineProps<Props>();
+const { abilities, cssClass } = defineProps<Props>();
 
 const getEnglishEffect = (effectEntries: EffectEntry[] | undefined): string | null => {
   if (!effectEntries || effectEntries.length === 0) return null;

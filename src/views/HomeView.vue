@@ -11,16 +11,17 @@
       :key="pokemon.name"
       class="hover:cursor-pointer hover:bg-gray-200"
       :pokemon
+      v-view-transition-name="pokemon.name"
       @click="replacePokemon"
     />
-
-    <!-- sentinel -->
-    <div ref="sentinel" class="h-1 col-span-full"></div>
   </div>
+
+  <!-- sentinel -->
+  <div ref="sentinel" class="h-1 col-span-full" />
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, useTemplateRef } from 'vue';
 import { useInfiniteQuery } from '@tanstack/vue-query';
 import { getPokemonPage } from '@/api/getPokemonList';
 import CardComponent from '@/components/CardComponent.vue';
@@ -35,23 +36,25 @@ const replacePokemon = (pokemon: Pokemon) => {
 const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } =
   useInfiniteQuery({
     queryKey: ['pokemonList'],
-    queryFn: ({ pageParam = 0 }) => getPokemonPage(pageParam as number),
+    queryFn: ({ pageParam }) => getPokemonPage(pageParam),
     getNextPageParam: (_, allPages) => {
       const totalFetched = allPages.length * 20;
-      return totalFetched < 1302 ? totalFetched : undefined;
+      return totalFetched <= 1350 ? allPages.length : undefined;
     },
     initialPageParam: 0,
   });
 
 const allPokemon = computed(() => data.value?.pages.flat() ?? []);
 
-const sentinel = ref(null);
+const sentinel = useTemplateRef('sentinel');
 
-useIntersectionObserver(sentinel, ([entry]) => {
-  if (!entry.isIntersecting) return;
+onMounted(() => {
+  useIntersectionObserver(sentinel, ([entry]) => {
+    if (!entry.isIntersecting) return;
 
-  if (hasNextPage.value && !isFetchingNextPage.value) {
-    fetchNextPage();
-  }
+    if (hasNextPage.value && !isFetchingNextPage.value && !isLoading.value && !isError.value) {
+      fetchNextPage();
+    }
+  });
 });
 </script>

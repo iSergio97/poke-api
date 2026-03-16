@@ -16,10 +16,10 @@
 
       <div class="flex flex-col items-stretch w-full place-items-start">
         <div class="pt-4 sm:pt-8 md:pt-12">
-          <AbilityComponent :abilities="pokemon!.abilities" class="w-full" />
+          <AbilityComponent :abilities="pokemon!.abilities" css-class="w-full" />
         </div>
         <div class="pt-4 sm:pt-8 md:pt-12">
-          <StatsComponent :stats="pokemon!.stats" class="w-full" />
+          <StatsComponent :stats="pokemon!.stats" css-class="w-full" />
         </div>
       </div>
     </div>

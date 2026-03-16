@@ -15,7 +15,6 @@ export const getPokemonPage = async (page: number): Promise<Pokemon[]> => {
   const offset = page * 20;
   const limit = (page + 1) * 20;
   const response = await axios.get(`${BASE_URL}/pokemon?offset=${offset}&limit=${limit}`);
-  console.log(response.data);
   const searchList: SearchPokemon[] = response.data.results;
   return await getListadoPokemon(searchList);
 };

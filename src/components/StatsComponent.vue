@@ -2,7 +2,7 @@
   <div class="space-y-3 border border-gray-200 rounded-xl p-4 bg-white shadow-sm">
     <h3 class="text-xl font-semibold mb-2">Stats</h3>
 
-    <div v-for="(stat, index) in stats" :key="stat.stat.name" class="flex items-center gap-4">
+    <div v-for="(stat, index) in stats" :key="stat.stat.name" :class="`flex items-center gap-4 ${cssClass}`">
       <!-- Stat name -->
       <span class="w-28 text-sm font-medium text-gray-700">
         {{ formatStatName(stat.stat.name) }}
@@ -31,9 +31,10 @@ import { ref, onMounted } from 'vue';
 
 interface Props {
   stats: Stat[];
+  cssClass: string,
 }
 
-const { stats } = defineProps<Props>();
+const { stats, cssClass } = defineProps<Props>();
 
 // Barra animada: starts at 0%, animates to real stat
 const animatedWidths = ref<number[]>([]);

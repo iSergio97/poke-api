@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
+import { startViewTransition } from 'vue-view-transitions';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,5 +20,10 @@ const router = createRouter({
     },
   ],
 });
+
+router.beforeResolve(async () => {
+  const viewTransition = startViewTransition();
+  await viewTransition.finished;
+})
 
 export default router;
