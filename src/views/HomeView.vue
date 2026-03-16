@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isLoading">Loading...</div>
+  <LoadingComponent v-if="isLoading" />
   <div v-else-if="isError" class="text-center text-red-500">Error loading Pokémon data</div>
 
   <div
@@ -25,6 +25,7 @@ import { computed, onMounted, useTemplateRef } from 'vue';
 import { useInfiniteQuery } from '@tanstack/vue-query';
 import { getPokemonPage } from '@/api/getPokemonList';
 import CardComponent from '@/components/CardComponent.vue';
+import LoadingComponent from '@/components/LoadingComponent.vue';
 import type { Pokemon } from '@/interface/pokemon.interface';
 import router from '@/router';
 import { useIntersectionObserver } from '@vueuse/core';
